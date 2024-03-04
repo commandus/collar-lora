@@ -21,7 +21,7 @@ bool overTheAirActivation = false; // OTAA
 // ADR enable
 bool loraWanAdr = true;
 // Indicates if the node is sending confirmed or unconfirmed messages
-bool isTxConfirmed = true;
+bool isTxConfirmed = false;
 // Application port
 uint8_t appPort = 2;
 /*!
