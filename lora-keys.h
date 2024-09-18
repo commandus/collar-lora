@@ -8,7 +8,13 @@ uint8_t appSKey[] = { 0xd7, 0x2c, 0x78, 0x75, 0x8c, 0xdc, 0xca, 0xbf, 0x55, 0xee
 uint32_t devAddr =  (uint32_t) 0x007e6ae1;
 // LoraWan channelsmask, default channels 0-7
 uint16_t userChannelsMask[6] = { 0x00FF, 0x0000, 0x0000, 0x0000, 0x0000, 0x0000 };
-uint32_t license[4] = { 0xAD8973C6, 0xEE5887FB, 0x8464951F, 0x180A219F };
+
+// first 
+// uint32_t license[4] = { 0xAD8973C6, 0xEE5887FB, 0x8464951F, 0x180A219F };
+// second device
+// The license for B017986CDDA0:
+uint32_t license[4] = { 0x363639EA, 0xFF56540B, 0xAAF5FA2F, 0xA65B693F };
+
 // LoraWan region, select in arduino IDE tools
 LoRaMacRegion_t loraWanRegion = ACTIVE_REGION;
 // LoraWan Class, Class A and Class C are supported
