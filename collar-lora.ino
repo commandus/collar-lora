@@ -103,6 +103,10 @@ void setup() {
   delay(100);
 	dspl.clear();
   deviceState = DEVICE_STATE_INIT;
+
+  // The chip ID is essentially its MAC address(length: 6 bytes).
+  uint64_t chipid = ESP.getEfuseMac();
+  Serial.println("DeviceId=" + String(chipid, HEX));
 }
 
 // Prepares the payload of the frame 
