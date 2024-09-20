@@ -1,5 +1,11 @@
 # Send 4 bytes
 
+Tools - Board - Heltec ESP32 Series Dev boards - WiFi Lora 32 (v2)?
+
+license for B017986CDDA0:
+uint32_t license[4] = { 0x363639EA, 0xFF56540B, 0xAAF5FA2F, 0xA65B693F };
+
+
 ## Address
 
 ABP
