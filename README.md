@@ -27,5 +27,10 @@ Send 4 bytes:
 
 - 0xAA;
 - 0x11;
-- counter low byre
-- counter high byre
+- counter low byte
+- counter high byte
+
+
+## References
+
+https://lora-packet.vercel.app/

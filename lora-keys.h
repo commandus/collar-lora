@@ -19,9 +19,9 @@ uint32_t license[4] = { 0x363639EA, 0xFF56540B, 0xAAF5FA2F, 0xA65B693F };
 // LoraWan region, select in arduino IDE tools
 LoRaMacRegion_t loraWanRegion = ACTIVE_REGION;
 // LoraWan Class, Class A and Class C are supported
-DeviceClass_t loraWanClass = CLASS_A;
+DeviceClass_t loraWanClass = CLASS_C;
 // the application data transmission duty cycle.  value in [ms].
-uint32_t appTxDutyCycle = 1000;
+uint32_t appTxDutyCycle = 15 * 1000;
 // OTAA or ABP
 // bool overTheAirActivation = true; // OTAA
 bool overTheAirActivation = false; // ABP
@@ -53,3 +53,25 @@ uint8_t appPort = 2;
 */
 uint8_t confirmedNbTrials = 4;
 
+// Start Tx: Freq:868%900000 SF12 size:34 preamb:6
+
+#define RF_FREQUENCY                                867100000// 868900000
+
+  
+// #define LORA_BANDWIDTH                              0
+// 1- 250
+#define LORA_BANDWIDTH                              1
+
+// datarate 6: 64, 7: 128, 8: 256, 9: 512, 10: 1024, 11: 2048, 12: 4096
+// #define LORA_SPREADING_FACTOR                    9
+#define LORA_SPREADING_FACTOR                       12
+// 2 - 4/6
+#define LORA_CODINGRATE                             2
+// #define LORA_CODINGRATE                             1
+
+// the hardware adds 4 more symbols) 6 - 4 = 2
+// #define LORA_PREAMBLE_LENGTH                        8
+#define LORA_PREAMBLE_LENGTH                        8
+#define LORA_SYMBOL_TIMEOUT                         0         
+#define LORA_FIX_LENGTH_PAYLOAD_ON                  false
+#define LORA_IQ_INVERSION_ON                        false

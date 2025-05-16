@@ -1,3 +1,6 @@
+/**
+ * With LCD display
+ */
 #include <heltec.h>
 
 #include "LoRaWan_APP.h"
@@ -11,26 +14,39 @@
 
 SSD1306Wire dspl(0x3c, 500000, SDA_OLED, SCL_OLED, GEOMETRY_128_64, RST_OLED);
 
+void ledLight(int times) {
+  for (int i = 0; i < times; i++) {
+    digitalWrite(LED, HIGH);
+    delay(50);
+    digitalWrite(LED, LOW);
+    delay(50);
+  }
+}
+
 class CollarState {
   public:
     enum eDeviceState_LoraWan state;
     uint16_t txCount;
+    uint16_t rxCount;
+    uint16_t rxSize;
     CollarState()
-      : state(DEVICE_STATE_INIT), txCount(0)
+      : state(DEVICE_STATE_INIT), txCount(0), rxCount(0), rxSize(0)
       {
 
       }
       CollarState &operator=(const CollarState &v) {
         txCount = v.txCount;
+        rxCount = v.rxCount;
+        rxSize = v.rxSize;
         state = v.state;
         return *this;
       }
       bool operator==(const CollarState &v) {
-        return (state == v.state) && (txCount == v.txCount);
+        return (state == v.state) && (txCount == v.txCount) && (rxCount == v.rxCount);
       }
 
       bool operator!=(const CollarState &v) {
-        return (state != v.state) || (txCount != v.txCount);
+        return (state != v.state) || (txCount != v.txCount) || (rxCount != v.rxCount);
       }
 };
 
@@ -41,6 +57,21 @@ void logo(){
 	dspl.clear();
 	dspl.drawXbm(32, 5, logoWidth,logoHeight, (const unsigned char *) logoBits);
 	dspl.display();
+}
+
+void downLinkDataHandle(McpsIndication_t *mcpsIndication)
+{
+  Serial.println("downlink");  
+  if (mcpsIndication->RxData) {
+    state.rxCount++;
+    state.rxSize = mcpsIndication->RxData;
+    for (uint8_t i = 0; i < mcpsIndication->BufferSize; i++) {
+      if (i > 255 - 4)
+        break;
+      appData[4 + i] = mcpsIndication->Buffer[i];
+    }
+  }
+  ledLight(1);
 }
 
 void updateState()
@@ -64,7 +95,7 @@ void updateState()
   
   dspl.drawString(0, 0, s); 
 
-  s =  "Tx: " + String(state.txCount, DEC);
+  s =  "T: " + String(state.txCount, DEC) + " R: " + String(state.rxCount, DEC);
   dspl.drawString(0, 10, s);
 
   switch (deviceState) {
@@ -94,6 +125,9 @@ void setup() {
   Serial.begin(115200);
 	pinMode(Vext, OUTPUT);
   digitalWrite(Vext, LOW);
+
+  pinMode(LED, OUTPUT);
+  
 	dspl.init();
 
 	logo();
@@ -106,6 +140,15 @@ void setup() {
 
   // The chip ID is essentially its MAC address(length: 6 bytes).
   uint64_t chipid = ESP.getEfuseMac();
+  
+  LoRaWAN.init(CLASS_C, ACTIVE_REGION);
+  Radio.SetChannel(RF_FREQUENCY);
+  Radio.SetRxConfig(
+      MODEM_LORA, LORA_BANDWIDTH, LORA_SPREADING_FACTOR, LORA_CODINGRATE, 0, 
+      LORA_PREAMBLE_LENGTH, LORA_SYMBOL_TIMEOUT, LORA_FIX_LENGTH_PAYLOAD_ON,
+      0, true, 0, 0, LORA_IQ_INVERSION_ON, true);
+  // Radio.SetSyncWord(0x34);
+  
   Serial.println("DeviceId=" + String(chipid, HEX));
 }
 
